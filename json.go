@@ -2,7 +2,6 @@ package tnjson
 
 import (
 	"reflect"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -59,11 +58,9 @@ func (j *JSON) Decode(json string) map[string]interface{} {
 	j.jp = make(map[string]interface{})
 	json = json[1 : len(json)-1]
 	stringArr := strings.Split(json, ",")
-	reg := regexp.MustCompile(`[\PP]+`)
 	for i := 0; i < len(stringArr); i++ {
 		str := strings.Split(stringArr[i], ":")
-		//fmt.Println(reg.FindAllString(str[1], -1)[0])
-		j.jp[reg.FindAllString(str[0], -1)[0]] = reg.FindAllString(str[1], -1)[0]
+		j.jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
 	}
 	return j.jp
 }
