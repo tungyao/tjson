@@ -1,4 +1,4 @@
-package tnjson
+package tjson
 
 import (
 	"reflect"
@@ -54,13 +54,15 @@ func (j *JSON) Encode(obj interface{}) string {
 	js = js[:len(js)-1]
 	return "{" + js + "}"
 }
-func (j *JSON) Decode(json string) map[string]interface{} {
-	j.jp = make(map[string]interface{})
+func Decode(json string) map[string]interface{} {
+	jp := make(map[string]interface{})
+	json = strings.ReplaceAll(json, "\n", "")
+	json = strings.ReplaceAll(json, "\t", "")
 	json = json[1 : len(json)-1]
 	stringArr := strings.Split(json, ",")
 	for i := 0; i < len(stringArr); i++ {
 		str := strings.Split(stringArr[i], ":")
-		j.jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
+		jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
 	}
-	return j.jp
+	return jp
 }

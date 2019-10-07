@@ -7,3 +7,8 @@
 # Function
 * `Encode(obj *interface) string`,you can get string-type
 * `Decode(string) map[string]interface{}`,as that say
+# Usage
+* Decode
+    * Decode(string) map[string]interface
+* Encode
+    * new(tjson.JSON).Encode(interface{})
