@@ -2,6 +2,7 @@ package tjson
 
 import (
 	"encoding/json"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -68,7 +69,8 @@ func Decode(json string) map[string]interface{} {
 	stringArr := strings.Split(json, ",")
 	for i := 0; i < len(stringArr); i++ {
 		str := strings.Split(stringArr[i], ":")
-		jp[strings.Replace(str[0], "\"", "", -1)] = str[1]
+		log.Println(reflect.TypeOf(str[1]))
+		jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
 	}
 	return jp
 }
