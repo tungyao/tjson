@@ -7,7 +7,7 @@ import (
 )
 
 func TestJSON(t *testing.T) {
-	data := `{"id":"1","sess                              ion_key":"24SlFzzCtR8qNbqGJzwgdA=="}`
+	data := "{\"name\":\"123h_____ehiu12123aduhausd$asdjiqwejsd\",\"age\":26}"
 	out := tjson.Decode(data)
 	log.Println(out)
 	log.Println(new(tjson.JSON).Encode(out))

@@ -1,6 +1,8 @@
 package tjson
 
 import (
+	"encoding/json"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -20,11 +22,12 @@ func (j *JSON) _format(obj interface{}) *JSON {
 			switch reflect.TypeOf(v).Kind() {
 			case reflect.Map:
 				j.json.WriteString("\"" + k + "\":{")
+				j.mp = true
 				j._format(v)
 			case reflect.String:
-				j.json.WriteString("\"" + k + "\":" + "\"" + reflect.ValueOf(v).String() + "\"")
+				j.json.WriteString("\"" + k + "\":" + "\"" + reflect.ValueOf(v).String() + "\",")
 			case reflect.Int:
-				j.json.WriteString("\"" + k + "\":" + "\"" + strconv.Itoa(reflect.ValueOf(v).Interface().(int)) + "\"")
+				j.json.WriteString("\"" + k + "\":" + "\"" + strconv.Itoa(reflect.ValueOf(v).Interface().(int)) + "\",")
 			}
 		}
 	case reflect.Map:
@@ -33,7 +36,7 @@ func (j *JSON) _format(obj interface{}) *JSON {
 			switch reflect.TypeOf(v).Kind() {
 			case reflect.Ptr:
 				j.json.WriteString("\"" + k + "\":{")
-				j.mp = true
+				j.mp = false
 				j._format(v)
 			case reflect.String:
 				j.json.WriteString("\"" + k + "\":" + "\"" + reflect.ValueOf(v).String() + "\"")
@@ -42,17 +45,21 @@ func (j *JSON) _format(obj interface{}) *JSON {
 			}
 			if j.mp == true {
 				j.json.WriteString("}")
-				j.mp = false
 			}
 			j.json.WriteString(",")
 		}
 	}
 	return j
 }
-func (j *JSON) Encode(obj interface{}) string {
-	js := j._format(obj).json.String()
-	js = js[:len(js)-1]
-	return "{" + js + "}"
+func Encode(obj interface{}) string {
+	//js := j._format(obj).json.String()
+	//js = js[:len(js)-1]
+	//return "{" + js + "}"
+	data, err := json.Marshal(obj)
+	if err != nil {
+		println(err)
+	}
+	return string(data)
 }
 func Decode(json string) map[string]interface{} {
 	jp := make(map[string]interface{})
@@ -64,6 +71,7 @@ func Decode(json string) map[string]interface{} {
 	stringArr := strings.Split(json, ",")
 	for i := 0; i < len(stringArr); i++ {
 		str := strings.Split(stringArr[i], ":")
+		log.Println(reflect.TypeOf(str[1]))
 		jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
 	}
 	return jp
