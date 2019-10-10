@@ -65,6 +65,7 @@ func Decode(json string) map[string]interface{} {
 	jp := make(map[string]interface{})
 	json = strings.ReplaceAll(json, "\n", "")
 	json = strings.ReplaceAll(json, "\t", "")
+	json = strings.ReplaceAll(json, "\r", "")
 	json = json[1 : len(json)-1]
 	stringArr := strings.Split(json, ",")
 	for i := 0; i < len(stringArr); i++ {
