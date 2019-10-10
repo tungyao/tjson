@@ -63,6 +63,7 @@ func Encode(obj interface{}) string {
 }
 func Decode(json string) map[string]interface{} {
 	jp := make(map[string]interface{})
+	log.Println(json, "----------")
 	json = strings.ReplaceAll(json, "\n", "")
 	json = strings.ReplaceAll(json, "\t", "")
 	json = strings.ReplaceAll(json, "\r", "")
@@ -70,7 +71,6 @@ func Decode(json string) map[string]interface{} {
 	stringArr := strings.Split(json, ",")
 	for i := 0; i < len(stringArr); i++ {
 		str := strings.Split(stringArr[i], ":")
-		log.Println(reflect.TypeOf(str[1]))
 		jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
 	}
 	return jp
