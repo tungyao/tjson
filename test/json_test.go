@@ -6,9 +6,10 @@ import (
 )
 
 func TestJSON(t *testing.T) {
-	data := "{\"id\":\"1\",\"session_key\":\"24SlFzzCtR8qNbqGJzwgdA==\"}"
-	out := tjson.Decode(data)
-	t.Log(out["id"])
+	data := `{"name":"tung","age":"12","other":{"love":"you"},"play":"football"}`
+	//out := tjson.Decode(data)
+	//t.Log(out)
+	tjson.Decode([]byte(data))
 	//out1 := map[string]interface{}{"name": "son", "age": 12, "other": map[string]interface{}{"phone": "xiaomi", "test": 14}}
 	//log.Println(tjson.Encode(out1))
 }
