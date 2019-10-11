@@ -101,7 +101,7 @@ func Decode(buff []byte) map[string]interface{} {
 	}
 	js.comma = append(js.comma, len(buff))
 	if len(js.braces)%2 != 0 {
-		panic("JSON format error")
+		log.Panicln("JSON format error ", string(buff))
 	}
 	buf := make([][]byte, 0)
 	for i := 0; i < len(js.comma); i++ {
