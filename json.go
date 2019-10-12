@@ -10,7 +10,7 @@ import (
 
 var log = yell.New(yell.Config{
 	Path:     "/var/log",
-	FileName: "tjson.log",
+	FileName: "tjson",
 }, "[TJSON]")
 
 type JSON struct {
