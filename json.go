@@ -2,11 +2,16 @@ package tjson
 
 import (
 	"encoding/json"
-	"log"
+	"github.com/tungyao/yell"
 	"reflect"
 	"strconv"
 	"strings"
 )
+
+var log = yell.New(yell.Config{
+	Path:     "/var/log",
+	FileName: "tjson.log",
+}, "[TJSON]")
 
 type JSON struct {
 	json strings.Builder
