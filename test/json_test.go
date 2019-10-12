@@ -2,13 +2,14 @@ package test
 
 import (
 	"../../tjson"
-	"log"
 	"testing"
 )
 
 func TestJSON(t *testing.T) {
-	data := "{\"name\":\"123h_____ehiu12123aduhausd$asdjiqwejsd\",\"age\":26}"
-	out := tjson.Decode(data)
-	log.Println(out)
-	log.Println(new(tjson.JSON).Encode(out))
+	data := `{"name":"tung","age":"12","other":{"love":"you"},"play":"football"}`
+	//out := tjson.Decode(data)
+	//t.Log(out)
+	tjson.Decode([]byte(data))
+	//out1 := map[string]interface{}{"name": "son", "age": 12, "other": map[string]interface{}{"phone": "xiaomi", "test": 14}}
+	//log.Println(tjson.Encode(out1))
 }
