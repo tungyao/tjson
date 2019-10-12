@@ -6,7 +6,7 @@ import (
 )
 
 func TestJSON(t *testing.T) {
-	data := `{"name":"tung","age":"12","other":{"love":"you"},"play":"football"}`
+	data := `{"name":"tung:yao","age":"12","other":{"love":"you"},"play":"football"}`
 	//out := tjson.Decode(data)
 	//t.Log(out)
 	tjson.Decode([]byte(data))

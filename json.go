@@ -2,7 +2,6 @@ package tjson
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"reflect"
 	"strconv"
@@ -100,7 +99,7 @@ func Decode(buff []byte) map[string]interface{} {
 		}
 	}
 	js.comma = append(js.comma, len(buff))
-	if len(js.braces)%2 != 0 {
+	if len(js.braces)%2 != 0 && len(js.braces) > 1 {
 		log.Panicln("JSON format error ", string(buff))
 	}
 	buf := make([][]byte, 0)
@@ -120,7 +119,7 @@ func Decode(buff []byte) map[string]interface{} {
 				colon = append(colon, j)
 			}
 		}
-		if len(colon) == 1 {
+		if formatByteToMap(buf[i], colon) {
 			outMap[string(deleteSymbol(buf[i][:colon[0]]))] = string(deleteSymbol(buf[i][colon[0]+1:]))
 		} else {
 			outMap[string(deleteSymbol(buf[i][:colon[0]]))] = Decode(buf[i][colon[0]+1:])
@@ -130,18 +129,13 @@ func Decode(buff []byte) map[string]interface{} {
 	log.Println("---TJSON---", outMap)
 	return outMap
 }
-func formatByteToMap(b []byte) {
-	sotr := make(map[string]interface{})
-	colon := make([]int, 0)
-	for j := 0; j < len(b); j++ {
-		if b[j] == 58 {
-			colon = append(colon, j)
+func formatByteToMap(j []byte, n []int) bool {
+	for i := 0; i < len(j); i++ {
+		if i > n[0] && i < n[len(n)-1:][0] && j[i] == 123 {
+			return false
 		}
 	}
-	if len(colon) == 1 {
-		sotr[string(deleteSymbol(b[:colon[0]]))] = string(deleteSymbol(b[colon[0]+1:]))
-	}
-	fmt.Println(sotr)
+	return true
 }
 func deleteSymbol(b []byte) []byte {
 	for j := 0; j < len(b); j++ {
