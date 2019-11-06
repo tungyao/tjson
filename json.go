@@ -2,16 +2,11 @@ package tjson
 
 import (
 	"encoding/json"
-	"github.com/tungyao/yell"
+	"log"
 	"reflect"
 	"strconv"
 	"strings"
 )
-
-var log = yell.New(yell.Config{
-	Path:     "/var/log",
-	FileName: "tjson",
-}, "[TJSON]")
 
 type JSON struct {
 	json strings.Builder
@@ -131,7 +126,6 @@ func Decode(buff []byte) map[string]interface{} {
 		}
 
 	}
-	log.Println("---TJSON---", outMap)
 	return outMap
 }
 func formatByteToMap(j []byte, n []int) bool {
