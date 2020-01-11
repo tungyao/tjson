@@ -2,7 +2,7 @@ package tjson
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
 	"reflect"
 	"strconv"
 	"strings"
@@ -51,30 +51,13 @@ func (j *JSON) _format(obj interface{}) *JSON {
 	}
 	return j
 }
-func Encode(obj interface{}) string {
-	//js := j._format(obj).json.String()
-	//js = js[:len(js)-1]
-	//return "{" + js + "}"
+func Encode(obj interface{}) ([]byte, error) {
 	data, err := json.Marshal(obj)
 	if err != nil {
-		println(err)
+		return nil, err
 	}
-	return string(data)
+	return data, err
 }
-
-//func Decode(json string) map[string]interface{} {
-//	jp := make(map[string]interface{})
-//	json = strings.ReplaceAll(json, "\n", "")
-//	json = strings.ReplaceAll(json, "\t", "")
-//	json = strings.ReplaceAll(json, "\r", "")
-//	json = json[1 : len(json)-1]
-//	stringArr := strings.Split(json, ",")
-//	for i := 0; i < len(stringArr); i++ {
-//		str := strings.Split(stringArr[i], ":")
-//		jp[strings.Replace(str[0], "\"", "", -1)] = strings.Replace(str[1], "\"", "", -1)
-//	}
-//	return jp
-//}
 
 type braces struct {
 	index int
@@ -86,7 +69,7 @@ type jsons struct {
 	comma  []int    `记录逗号位置 44`
 }
 
-func Decode(buff []byte) map[string]interface{} {
+func Decode(buff []byte) (map[string]interface{}, error) {
 	js := new(jsons)
 	outMap := make(map[string]interface{})
 	for k, v := range buff {
@@ -100,7 +83,7 @@ func Decode(buff []byte) map[string]interface{} {
 	}
 	js.comma = append(js.comma, len(buff))
 	if len(js.braces)%2 != 0 && len(js.braces) > 1 {
-		log.Panicln("JSON format error ", string(buff))
+		return nil, errors.New("JSON format error " + string(buff))
 	}
 	buf := make([][]byte, 0)
 	for i := 0; i < len(js.comma); i++ {
@@ -122,11 +105,14 @@ func Decode(buff []byte) map[string]interface{} {
 		if formatByteToMap(buf[i], colon) {
 			outMap[string(deleteSymbol(buf[i][:colon[0]]))] = string(deleteSymbol(buf[i][colon[0]+1:]))
 		} else {
-			outMap[string(deleteSymbol(buf[i][:colon[0]]))] = Decode(buf[i][colon[0]+1:])
+			a, err := Decode(buf[i][colon[0]+1:])
+			if err != nil {
+				outMap[string(deleteSymbol(buf[i][:colon[0]]))] = a
+			}
 		}
 
 	}
-	return outMap
+	return outMap, nil
 }
 func formatByteToMap(j []byte, n []int) bool {
 	for i := 0; i < len(j); i++ {
